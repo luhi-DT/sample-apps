@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dotnetcore-glibc
+  name: 02-dotnetcore-glibc
+  namespace: sample
+spec:
+  replicas: 3
+  revisionHistoryLimit: 15
+  selector:
+    matchLabels:
+      app: dotnetcore
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        oneagent.dynatrace.com/technologies: dotnet
+        oneagent.dynatrace.com/failure-policy: fail
+      labels:
+        app: dotnetcore
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_URLS
+          value: http://+:8080
+        image: mcr.microsoft.com/dotnet/samples:aspnetapp
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 600
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 2
+        name: app
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 512Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
