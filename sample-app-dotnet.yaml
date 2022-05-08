@@ -4,10 +4,10 @@ kind: Deployment
 metadata:
   labels:
     app: dotnetcore-glibc
-  name: 02-dotnetcore-glibc
+  name: dotnet-sample
   namespace: sample
 spec:
-  replicas: 3
+  replicas: 8
   revisionHistoryLimit: 15
   selector:
     matchLabels:
