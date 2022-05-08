@@ -9,7 +9,6 @@ metadata:
   namespace: dynatrace
 spec:
   apiUrl: <api-URL>
-  tokens: testkube
   namespaceSelector:
     matchLabels:
       monitor: app
