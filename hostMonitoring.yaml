@@ -1,0 +1,21 @@
+#######################################################
+###           hostMonitoring                        ###
+#######################################################
+
+apiVersion: dynatrace.com/v1beta1
+kind: DynaKube
+metadata:
+  name: dynakube
+  namespace: dynatrace
+spec:
+  apiUrl: <apiURL>
+  oneAgent:
+    hostMonitoring:
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+  activeGate: # configuration applies to one AG instance
+    capabilities:
+      - routing
+      - kubernetes-monitoring
